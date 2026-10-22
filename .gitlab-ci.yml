@@ -1,0 +1,15 @@
+stages: [lint, backup-test]
+
+shellcheck:
+  stage: lint
+  image: koalaman/shellcheck-alpine:stable
+  script:
+    - shellcheck scripts/*.sh
+
+backup-dryrun:
+  stage: backup-test
+  tags: [assessment]           # runner di server assessment (jika disediakan)
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"   # hanya dijalankan manual
+  script:
+    - bash scripts/backup-website.sh

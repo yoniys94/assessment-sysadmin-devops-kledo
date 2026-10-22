@@ -1,0 +1,19 @@
+server {
+    listen 80;
+    server_name laravel.yoni.efs.my.id;
+    root /var/www/laravel.yoni.efs.my.id/public;   # ← kunci Laravel: arah ke /public
+    index index.php index.html;
+
+    location / { try_files $uri $uri/ /index.php?$query_string; }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+
+    location ~ /\. { deny all; return 404; }       # blokir .env, .git, dll
+
+    access_log /var/log/nginx/laravel.access.log;
+    error_log  /var/log/nginx/laravel.error.log;
+    server_tokens off;
+}
